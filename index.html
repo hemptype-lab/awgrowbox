@@ -1,462 +1,473 @@
-
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body {
-                  background-color: white; /* Ensure the iframe has a white background */
-                }
-    
-                * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-}
-
-:root {
-    --bg: #0f172a;
-    --text: #f1f5f9;
-    --primary: #10b981;
-    --accent: #0ea5e9;
-    --card-bg: #1e293b;
-    --border: #334155;
-    --yield-bg: #065f46;
-    --yield-text: #a7f3d0;
-}
-
-body {
-    background: var(--bg);
-    color: var(--text);
-    padding: 16px;
-    min-height: 100vh;
-}
-
-.app-container {
-    max-width: 768px;
-    margin: 0 auto;
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 24px;
-    padding: 20px 0;
-}
-
-.header h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 10px;
-}
-
-.panel {
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 24px;
-    margin-bottom: 20px;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.slider-group,
-.select-group {
-    margin-bottom: 20px;
-}
-
-.slider-group label,
-.select-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-
-input[type="range"] {
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: linear-gradient(to right, var(--primary), var(--accent));
-    outline: none;
-    -webkit-appearance: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: white;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-
-select {
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    background: var(--bg);
-    color: var(--text);
-    border: 1px solid var(--border);
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-button {
-    width: 100%;
-    padding: 16px;
-    border: none;
-    border-radius: 14px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-#build-btn {
-    background: linear-gradient(135deg, var(--primary), #059669);
-    color: white;
-}
-
-#build-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-}
-
-#download-btn {
-    background: linear-gradient(135deg, var(--accent), #0284c7);
-    color: white;
-    margin-top: 20px;
-}
-
-#download-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
-}
-
-.hidden {
-    display: none;
-}
-
-.box-3d {
-    width: 180px;
-    height: 180px;
-    margin: 0 auto 28px;
-    background: var(--bg);
-    border: 2px dashed var(--primary);
-    border-radius: 8px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    color: var(--primary);
-    opacity: 0.7;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 16px;
-    margin-bottom: 28px;
-}
-
-.stat-card {
-    background: rgba(16, 185, 129, 0.1);
-    border-radius: 16px;
-    padding: 16px;
-    text-align: center;
-    border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
-.stat-icon {
-    font-size: 1.8rem;
-    margin-bottom: 8px;
-}
-
-.stat-label {
-    font-size: 0.85rem;
-    opacity: 0.8;
-    margin-bottom: 4px;
-}
-
-.stat-value {
-    font-weight: 700;
-    font-size: 1rem;
-    margin-bottom: 4px;
-}
-
-.stat-price {
-    font-size: 0.95rem;
-    color: var(--primary);
-    font-weight: 600;
-}
-
-.yield-display {
-    text-align: center;
-    padding: 24px;
-    background: var(--yield-bg);
-    border-radius: 16px;
-    margin-bottom: 20px;
-}
-
-.yield-label {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--yield-text);
-    margin-bottom: 8px;
-}
-
-.yield-range {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: white;
-}
-
-@media (max-width: 480px) {
-    .header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .panel {
-        padding: 18px;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .box-3d {
-        width: 140px;
-        height: 140px;
-        font-size: 3rem;
-    }
-    
-    .yield-range {
-        font-size: 1.8rem;
-    }
-}
-
-
-              </style>
-                        </head>
-                        <body>
-                            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="color-scheme" content="light dark">
-    <title>GrowBox Builder</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Калькулятор GrowBox [AtlantWeed.link]</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --text: #111827;
+      --accent: #007AFF;
+      --accent-hover: #0062cc;
+      --card-bg: #ffffff;
+      --border: #e5e7eb;
+      --shadow: rgba(0, 0, 0, 0.05);
+      --shadow-hover: rgba(0, 0, 0, 0.08);
+      --slider-track: #d1d5db;
+      --slider-thumb: var(--accent);
+      --switch-bg: #f3f4f6;
+      --footer-text: #6b7280;
+    }
+
+    [data-theme="dark"] {
+      --bg: #111827;
+      --text: #f9fafb;
+      --card-bg: #1f2937;
+      --border: #374151;
+      --shadow: rgba(0, 0, 0, 0.2);
+      --shadow-hover: rgba(0, 0, 0, 0.3);
+      --slider-track: #4b5563;
+      --switch-bg: #374151;
+      --footer-text: #9ca3af;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      padding: 16px;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 30px var(--shadow);
+      position: relative;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--switch-bg);
+      border: none;
+      width: 52px;
+      height: 28px;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      transition: background 0.3s;
+    }
+
+    .theme-toggle::after {
+      content: '🌙';
+      font-size: 14px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      color: black;
+      border-radius: 50%;
+      display: block;
+      transition: transform 0.3s;
+    }
+
+    [data-theme="dark"] .theme-toggle::after {
+      content: '☀️';
+      transform: translateX(24px);
+      background: #1f2937;
+      color: white;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0 0 24px;
+      text-align: center;
+      letter-spacing: -0.4px;
+      color: var(--text);
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 3px;
+      background: var(--accent);
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .slider-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label, .slider-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 16px;
+      -webkit-appearance: none;
+      height: 8px;
+      background: var(--slider-track);
+      outline: none;
+      border-radius: 4px;
+      margin-top: 6px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--slider-thumb);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 122, 255, 0.4);
+      transition: transform 0.2s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:active {
+      transform: scale(1.3);
+    }
+
+    .slider-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      color: white;
+      background: var(--accent);
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .result {
+      display: none;
+      text-align: center;
+      margin-top: 28px;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      padding: 18px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 12px var(--shadow);
+      text-decoration: none;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s, transform 0.5s, box-shadow 0.25s;
+    }
+
+    .card:hover {
+      box-shadow: 0 6px 18px var(--shadow-hover);
+    }
+
+    .card i {
+      font-size: 22px;
+      width: 32px;
+      text-align: center;
+      margin-right: 14px;
+      color: var(--accent);
+    }
+
+    .card-content strong {
+      font-size: 16px;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .card-content div:last-child {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .total {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent);
+      margin: 16px 0;
+    }
+
+    .footer {
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--footer-text);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 20px; border-radius: 16px; }
+      h1 { font-size: 24px; }
+      .slider-value { font-size: 20px; }
+      .btn { padding: 14px; font-size: 16px; }
+      .footer { font-size: 13px; }
+    }
+
+    @media (max-width: 400px) {
+      body { padding: 12px; }
+      h1 { font-size: 22px; }
+      input[type="range"] { font-size: 15px; padding: 10px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
-            <h1>🌱 GrowBox Builder</h1>
-            <p>Точный расчёт урожая и оборудования</p>
-        </div>
+  <div class="container">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Переключить тему"></button>
+    <h1>Собрать GrowBox</h1>
 
-        <div class="panel controls">
-            <div class="slider-group">
-                <label>Длина: <span id="length-val">60</span> см</label>
-                <input type="range" id="length" min="40" max="200" value="60">
-            </div>
-            <div class="slider-group">
-                <label>Ширина: <span id="width-val">60</span> см</label>
-                <input type="range" id="width" min="40" max="200" value="60">
-            </div>
-            <div class="slider-group">
-                <label>Высота: <span id="height-val">160</span> см</label>
-                <input type="range" id="height" min="120" max="250" value="160">
-            </div>
-            <div class="slider-group">
-                <label>Растений: <span id="plants-val">4</span></label>
-                <input type="range" id="plants" min="1" max="16" value="4">
-            </div>
-            <div class="slider-group">
-                <label>Свет: <span id="light-wattage-val">100</span> Вт/растение</label>
-                <input type="range" id="light-wattage" min="50" max="150" value="100">
-            </div>
-            <div class="select-group">
-                <label>Тип сорта:</label>
-                <select id="strain-type">
-                    <option value="auto">Автоцвет</option>
-                    <option value="photo">Фотопериод</option>
-                </select>
-            </div>
-            <button id="build-btn">ПОСТРОИТЬ!</button>
-        </div>
+    <div class="slider-group">
+      <div class="slider-item">
+        <div class="slider-label">Количество кустов</div>
+        <div class="slider-value" id="plants-value">6</div>
+        <input type="range" id="plants" min="1" max="16" value="6" />
+      </div>
 
-        <div id="results" class="panel results hidden">
-            <div class="box-3d" id="3d-box"></div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">🌀</div>
-                    <div class="stat-content">
-                        <div class="stat-label">Вытяжка</div>
-                        <div class="stat-value" id="vent-result">127 м³/ч</div>
-                        <div class="stat-price" id="vent-price">5 866 ₽</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💡</div>
-                    <div class="stat-content">
-                        <div class="stat-label">Свет</div>
-                        <div class="stat-value" id="light-result">Mars Hydro TS1000</div>
-                        <div class="stat-price" id="light-price">12 144 ₽</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🌫️</div>
-                    <div class="stat-content">
-                        <div class="stat-label">Фильтр</div>
-                        <div class="stat-value" id="filter-result">125 мм</div>
-                        <div class="stat-price" id="filter-price">4 282 ₽</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🔇</div>
-                    <div class="stat-content">
-                        <div class="stat-label">Шумка</div>
-                        <div class="stat-value" id="noise-result">5 см</div>
-                        <div class="stat-price" id="noise-price">2 200 ₽</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📊</div>
-                    <div class="stat-content">
-                        <div class="stat-label">Электроника</div>
-                        <div class="stat-value" id="electronics-result">ESP8266 + DHT22</div>
-                        <div class="stat-price" id="electronics-price">2 500 ₽</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-content">
-                        <div class="stat-label">Электрика</div>
-                        <div class="stat-value" id="electricity-result">65 дней</div>
-                        <div class="stat-price" id="electricity-price">7 560 ₽</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="yield-display">
-                <div class="yield-label">УРОЖАЙ</div>
-                <div class="yield-range" id="yield-text">950–1050 г</div>
-            </div>
-
-            <button id="download-btn">СКАЧАТЬ PDF + ZIP</button>
-        </div>
+      <div class="slider-item">
+        <div class="slider-label">Объём горшка, л</div>
+        <div class="slider-value" id="pot-value">11</div>
+        <input type="range" id="pot" min="3" max="20" step="1" value="11" />
+      </div>
     </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <button class="btn" id="calculate">ПОДОБРАТЬ КОМПЛЕКТ</button>
 
+    <div class="result" id="result">
+      <div class="cards" id="cards"></div>
+      <div class="total" id="total"></div>
+      <a href="https://atlantweed.link" class="btn" target="_blank" rel="noopener">Задать вопрос гроверу</a>
+    </div>
 
-    
-              <script>
-                              class GrowBoxBuilder {
-    constructor() {
-        this.setupEventListeners();
+    <div class="footer">
+      <p>Время работы поддержки AtlantWeed.link<br>
+      Часы работы: Пн–Пт, 10:00–18:00</p>
+    </div>
+  </div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const body = document.body;
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  body.setAttribute('data-theme', savedTheme);
+  themeToggle.addEventListener('click', () => {
+    const next = body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    body.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  // Гроутенты — ТОЛЬКО ПОДТВЕРЖДЁННЫЕ
+  const tents = [
+    { key: '40',   l: 40,  w: 40,  h: 120, area: 0.16, maxPlants: 1,  price: 9990,  url: 'https://minifermer.ru/product_3509.html' },
+    { key: '60',   l: 60,  w: 60,  h: 140, area: 0.36, maxPlants: 3,  price: 12990, url: 'https://minifermer.ru/product_3510.html' },
+    { key: '80',   l: 80,  w: 80,  h: 160, area: 0.64, maxPlants: 5,  price: 15990, url: 'https://minifermer.ru/product_3511.html' },
+    { key: '100',  l: 100, w: 100, h: 200, area: 1.00, maxPlants: 8,  price: 18990, url: 'https://minifermer.ru/product_1534.html' },
+    { key: '120',  l: 120, w: 120, h: 200, area: 1.44, maxPlants: 12, price: 19990, url: 'https://minifermer.ru/product_1535.html' },
+    { key: '150',  l: 150, w: 150, h: 200, area: 2.25, maxPlants: 16, price: 24990, url: 'https://minifermer.ru/product_3513.html' }
+  ];
+
+const pots = {
+  3:  { name: 'Тканевый горшок 3 л',   price: 66,  url: 'https://minifermer.ru/product_1315.html' },
+  5:  { name: 'Тканевый горшок 5 л',   price: 78,  url: 'https://minifermer.ru/product_1316.html' },
+  7:  { name: 'Тканевый горшок 7 л',   price: 104, url: 'https://minifermer.ru/product_1354.html' },
+  10: { name: 'Тканевый горшок 10 л',  price: 128, url: 'https://minifermer.ru/product_1355.html' },
+  15: { name: 'Тканевый горшок 15 л',  price: 154, url: 'https://minifermer.ru/product_1358.html' },
+  20: { name: 'Тканевый горшок 20 л',  price: 176, url: 'https://minifermer.ru/product_1373.html' }
+};
+
+  const filters = {
+    '250': { name: 'Угольный фильтр Magicfilter 250/100', price: 3990, url: 'https://minifermer.ru/product_2273.html' },
+    '350': { name: 'Угольный фильтр Magicfilter 350/125', price: 4290, url: 'https://minifermer.ru/product_2274.html' },
+    '500': { name: 'Угольный фильтр Magicfilter 500/150', price: 5490, url: 'https://minifermer.ru/product_2275.html' },
+    '800': { name: 'Угольный фильтр Magicfilter 800/150', price: 6990, url: 'https://minifermer.ru/product_2276.html' }
+  };
+
+  const fans = {
+    '100': { name: 'Канальный вентилятор HF 100', price: 2190, url: 'https://minifermer.ru/product_3737.html' },
+    '125': { name: 'Канальный вентилятор HF 125', price: 2490, url: 'https://minifermer.ru/product_3738.html' },
+    '150': { name: 'Канальный вентилятор HF 150', price: 2890, url: 'https://minifermer.ru/product_3739.html' }
+  };
+
+  // Убираем слайдер объёма — расчёт автоматический
+  const plantsSlider = document.getElementById('plants');
+  const plantsValue = document.getElementById('plants-value');
+
+  // Скрыть слайдер объёма, если не нужен
+  document.querySelector('.slider-item:nth-child(2)').style.display = 'none';
+
+  plantsSlider.addEventListener('input', () => {
+    plantsValue.textContent = plantsSlider.value;
+  });
+
+  function selectTentAndVentilation(p) {
+    let tent = tents.find(t => p <= t.maxPlants) || tents[tents.length - 1];
+
+    let filter, fan;
+    if (tent.area <= 0.36) {
+      filter = filters['250'];
+      fan = fans['100'];
+    } else if (tent.area <= 0.72) {
+      filter = filters['350'];
+      fan = fans['125'];
+    } else if (tent.area <= 1.0) {
+      filter = filters['500'];
+      fan = fans['150'];
+    } else {
+      filter = filters['800'];
+      fan = fans['150'];
     }
 
-    setupEventListeners() {
-        const sliders = ['length', 'width', 'height', 'plants', 'light-wattage'];
-        sliders.forEach(id => {
-            const slider = document.getElementById(id);
-            const val = document.getElementById(`${id}-val`);
-            slider.addEventListener('input', () => {
-                val.textContent = slider.value;
-            });
-        });
+    return { tent, filter, fan };
+  }
 
-        document.getElementById('build-btn').addEventListener('click', () => {
-            this.calculate();
-        });
-
-        document.getElementById('download-btn').addEventListener('click', () => {
-            this.downloadFiles();
-        });
-    }
-
-    calculate() {
-        const length = parseFloat(document.getElementById('length').value);
-        const width = parseFloat(document.getElementById('width').value);
-        const height = parseFloat(document.getElementById('height').value);
-        const plants = parseInt(document.getElementById('plants').value);
-        const lightWattage = parseInt(document.getElementById('light-wattage').value);
-        const strainType = document.getElementById('strain-type').value;
-
-        const volume = (length * width * height) / 1000000;
-        const ventCfm = Math.round(volume * 40);
-        const totalWatts = plants * lightWattage;
-        const isAuto = strainType === 'auto';
-        const strainMultiplier = isAuto ? 0.9 : 1.1;
-        const gpw = 0.9;
-        const harvest = Math.round(totalWatts * gpw * strainMultiplier / 50) * 50;
-        const harvestMin = harvest - 50;
-        const harvestMax = harvest + 50;
-
-        // Фиксированные цены на 03.11.2025
-        const ventPrice = 5866;
-        const lightPrice = 12144;
-        const filterPrice = 4282;
-        const noisePrice = 2200;
-        const electronicsPrice = 2500;
-        const electricityCost = 7560;
-
-        document.getElementById('vent-result').textContent = `${ventCfm} м³/ч`;
-        document.getElementById('vent-price').textContent = `${ventPrice.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('light-result').textContent = `Mars Hydro TS1000`;
-        document.getElementById('light-price').textContent = `${lightPrice.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('filter-result').textContent = `125 мм`;
-        document.getElementById('filter-price').textContent = `${filterPrice.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('noise-result').textContent = `5 см`;
-        document.getElementById('noise-price').textContent = `${noisePrice.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('electronics-result').textContent = `ESP8266 + DHT22`;
-        document.getElementById('electronics-price').textContent = `${electronicsPrice.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('electricity-result').textContent = `65 дней`;
-        document.getElementById('electricity-price').textContent = `${electricityCost.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('yield-text').textContent = `${harvestMin}–${harvestMax} г`;
-
-        document.getElementById('results').classList.remove('hidden');
-    }
-
-    downloadFiles() {
-        const csvContent = `Название,Цена (₽),Ссылка
-Вентилятор ${Math.round(((parseFloat(document.getElementById('length').value) * parseFloat(document.getElementById('width').value) * parseFloat(document.getElementById('height').value)) / 1000000) * 40)} м³/ч,5866,https://t.me/ventilation_store
-Mars Hydro TS1000,12144,https://t.me/led_lighting_shop
-Угольный фильтр 125 мм,4282,https://t.me/ventilation_store
-Rockwool Comfortboard 5 см,2200,https://t.me/growshop_bot
-ESP8266 + DHT22,2500,https://t.me/growshop_bot`;
-        
-        const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const csvUrl = URL.createObjectURL(csvBlob);
-        const csvLink = document.createElement('a');
-        csvLink.href = csvUrl;
-        csvLink.download = 'shopping_list.csv';
-        csvLink.click();
-        URL.revokeObjectURL(csvUrl);
-
-        alert('Файлы сохранены! CSV-список загружен.');
-    }
+function selectPotSize(area) {
+  if (area <= 0.16) return 3;   // 40×40 → 1 куст → рассада/микрозелень
+  if (area <= 0.36) return 5;   // 60×60 → до 3 кустов
+  if (area <= 0.64) return 10;  // 80×80 → до 5 кустов
+  if (area <= 1.00) return 15;  // 100×100 → до 8 кустов
+  return 20;                    // 120×120 и 150×150 → до 12–16 кустов
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    new GrowBoxBuilder();
-});
+  function selectLamp(l, w) {
+    const area = (l / 100) * (w / 100);
+    if (area <= 0.64) {
+      return { name: 'Комплект Quantum Board 240 Вт', price: 18900, url: 'https://minifermer.ru/category/c266/', power: 240 };
+    } else if (area <= 1.2) {
+      return { name: 'Комплект Quantum Board 360 Вт', price: 25900, url: 'https://minifermer.ru/category/c311/', power: 360 };
+    } else {
+      const units = Math.ceil(area / 2.0);
+      return {
+        name: `Комплект Quantum Board 480 Вт${units > 1 ? ` ×${units}` : ''}`,
+        price: 32900 * units,
+        url: 'https://minifermer.ru/category/c294/',
+        power: 480 * units
+      };
+    }
+  }
 
-// Пустой файл для совместимости (весь 3D в HTML/CSS)
+  document.getElementById('calculate').addEventListener('click', () => {
+    const p = parseInt(plantsSlider.value);
 
+    const { tent, filter, fan } = selectTentAndVentilation(p);
+    const potSize = selectPotSize(tent.area);
+    const pot = pots[potSize];
+    const lamp = selectLamp(tent.l, tent.w);
 
-              </script>
-                        </body>
-                        </html>
-                    
+    const totalPotsPrice = pot.price * p;
+
+    const products = [
+      { name: `Гроутент MiniFermer ${tent.l}×${tent.w}×${tent.h} см`, price: tent.price, url: tent.url, icon: 'fa-tent' },
+      { name: lamp.name, price: lamp.price, url: lamp.url, icon: 'fa-lightbulb' },
+      { name: `${p} шт. ${pot.name}`, price: totalPotsPrice, url: pot.url, icon: 'fa-seedling' },
+      { name: filter.name, price: filter.price, url: filter.url, icon: 'fa-filter' },
+      { name: fan.name, price: fan.price, url: fan.url, icon: 'fa-fan' }
+    ];
+
+    const total = products.reduce((sum, item) => sum + item.price, 0);
+    const formattedTotal = total.toLocaleString('ru-RU') + ' ₽';
+
+    const cardsContainer = document.getElementById('cards');
+    cardsContainer.innerHTML = '';
+    products.forEach((product, i) => {
+      const card = document.createElement('a');
+      card.href = product.url;
+      card.className = 'card';
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
+      const formattedPrice = product.price.toLocaleString('ru-RU') + ' ₽';
+      card.innerHTML = `
+        <i class="fas ${product.icon}"></i>
+        <div class="card-content">
+          <strong>${product.name}</strong>
+          <div>${formattedPrice}</div>
+        </div>
+      `;
+      card.style.animation = `fadeIn 0.6s forwards`;
+      card.style.animationDelay = `${i * 0.1}s`;
+      card.style.opacity = '0';
+      cardsContainer.appendChild(card);
+    });
+
+    document.getElementById('total').textContent = `Итого: ${formattedTotal}`;
+    const resultElement = document.getElementById('result');
+    resultElement.style.display = 'block';
+    setTimeout(() => resultElement.classList.add('show'), 10);
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
