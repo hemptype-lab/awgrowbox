@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Админ-панель: Ссылки на оборудование</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .admin-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            color: #4CAF50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: rgba(46, 204, 113, 0.3);
+            color: #2ecc71;
+        }
+
+        .status.error {
+            background: rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+        }
+
+        .back-btn {
+            margin-top: 15px;
+            background: #3498db;
+        }
+
+        .back-btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>🔒 Админ-панель</h1>
+
+        <!-- Этап 1: Ввод пароля -->
+        <div id="step1">
+            <div class="form-group">
+                <label for="password">Пароль администратора</label>
+                <input type="password" id="password" placeholder="Введите пароль" autocomplete="off" />
+            </div>
+            <button class="btn" id="loginBtn">Войти</button>
+            <div id="loginStatus" class="status" style="display: none;"></div>
+        </div>
+
+        <!-- Этап 2: Редактирование ссылок -->
+        <div id="step2" class="form-section">
+            <div class="form-group">
+                <label for="linkBoxes">Гроу боксы (Telegram)</label>
+                <input type="text" id="linkBoxes" placeholder="https://t.me/growshop_bot" />
+            </div>
+            <div class="form-group">
+                <label for="linkLED">LED панели (Telegram)</label>
+                <input type="text" id="linkLED" placeholder="https://t.me/led_lighting_shop" />
+            </div>
+            <div class="form-group">
+                <label for="linkVent">Вентиляция (Telegram)</label>
+                <input type="text" id="linkVent" placeholder="https://t.me/ventilation_store" />
+            </div>
+            <button class="btn" id="saveBtn">Сохранить ссылки</button>
+            <button class="btn back-btn" id="backBtn">Назад</button>
+            <div id="saveStatus" class="status" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 🔑 Пароль теперь именно: "ADMIN_PASSWORD"
+        const ADMIN_PASSWORD = "ADMIN_PASSWORD";
+
+        // DOM элементы
+        const step1 = document.getElementById("step1");
+        const step2 = document.getElementById("step2");
+        const passwordInput = document.getElementById("password");
+        const loginBtn = document.getElementById("loginBtn");
+        const loginStatus = document.getElementById("loginStatus");
+        const linkBoxes = document.getElementById("linkBoxes");
+        const linkLED = document.getElementById("linkLED");
+        const linkVent = document.getElementById("linkVent");
+        const saveBtn = document.getElementById("saveBtn");
+        const backBtn = document.getElementById("backBtn");
+        const saveStatus = document.getElementById("saveStatus");
+
+        // Загрузка ссылок из localStorage
+        function loadLinks() {
+            const saved = localStorage.getItem("growbox_links");
+            if (saved) {
+                const links = JSON.parse(saved);
+                linkBoxes.value = links.boxes || "https://t.me/growshop_bot";
+                linkLED.value = links.led || "https://t.me/led_lighting_shop";
+                linkVent.value = links.vent || "https://t.me/ventilation_store";
+            }
+        }
+
+        // Сохранение ссылок в localStorage
+        function saveLinks() {
+            const links = {
+                boxes: linkBoxes.value.trim() || "https://t.me/growshop_bot",
+                led: linkLED.value.trim() || "https://t.me/led_lighting_shop",
+                vent: linkVent.value.trim() || "https://t.me/ventilation_store"
+            };
+            localStorage.setItem("growbox_links", JSON.stringify(links));
+            return links;
+        }
+
+        // Показ статуса
+        function showStatus(element, message, isSuccess) {
+            element.textContent = message;
+            element.className = "status " + (isSuccess ? "success" : "error");
+            element.style.display = "block";
+            setTimeout(() => {
+                element.style.display = "none";
+            }, 3000);
+        }
+
+        // Обработчики
+        loginBtn.addEventListener("click", () => {
+            if (passwordInput.value === ADMIN_PASSWORD) {
+                step1.style.display = "none";
+                step2.classList.add("active");
+                loadLinks();
+            } else {
+                showStatus(loginStatus, "❌ Неверный пароль!", false);
+                passwordInput.value = "";
+            }
+        });
+
+        saveBtn.addEventListener("click", () => {
+            saveLinks();
+            showStatus(saveStatus, "✅ Ссылки успешно сохранены!", true);
+        });
+
+        backBtn.addEventListener("click", () => {
+            step2.classList.remove("active");
+            step1.style.display = "block";
+            loginStatus.style.display = "none";
+        });
+
+        // Поддержка Enter
+        passwordInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") loginBtn.click();
+        });
+    </script>
+</body>
+</html>
+
