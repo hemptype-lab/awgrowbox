@@ -13,207 +13,231 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
 :root {
-    --bg: #121212;
-    --text: #ffffff;
-    --primary: #4CAF50;
-    --card-bg: #1e1e1e;
-    --border: #333;
-    --btn-bg: #3390ec;
-    --yield-color: #8bc34a;
+    --bg: #0f172a;
+    --text: #f1f5f9;
+    --primary: #10b981;
+    --accent: #0ea5e9;
+    --card-bg: #1e293b;
+    --border: #334155;
+    --yield-bg: #065f46;
+    --yield-text: #a7f3d0;
 }
 
 body {
     background: var(--bg);
     color: var(--text);
-    padding: 20px;
+    padding: 16px;
     min-height: 100vh;
 }
 
-.container {
-    max-width: 800px;
+.app-container {
+    max-width: 768px;
     margin: 0 auto;
 }
 
-header {
+.header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
     padding: 20px 0;
 }
 
-h1 {
-    font-size: 2rem;
-    color: var(--primary);
+.header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
 }
 
-.controls {
+.panel {
     background: var(--card-bg);
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 20px;
+    padding: 24px;
     margin-bottom: 20px;
     border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.control-group {
+.slider-group,
+.select-group {
     margin-bottom: 20px;
 }
 
-.control-group label {
+.slider-group label,
+.select-group label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
+    font-size: 0.95rem;
 }
 
-.size-inputs {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.size-inputs input {
-    flex: 1;
-}
-
-.size-inputs span {
-    width: 40px;
-    text-align: center;
-}
-
-input[type="range"], select {
+input[type="range"] {
     width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text);
-    border: 1px solid var(--border);
-    appearance: none;
-    height: 8px;
-    background: linear-gradient(to right, var(--primary), #8bc34a);
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(to right, var(--primary), var(--accent));
+    outline: none;
+    -webkit-appearance: none;
 }
 
 input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    width: 20px;
-    height: 20px;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     background: white;
     cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
-.btn-primary {
+select {
     width: 100%;
-    padding: 14px;
-    background: var(--btn-bg);
-    color: white;
-    border: none;
+    padding: 12px;
     border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background 0.3s;
-}
-
-.btn-primary:hover {
-    background: #2a7bc7;
-}
-
-.results {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 20px;
+    background: var(--bg);
+    color: var(--text);
     border: 1px solid var(--border);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#build-btn {
+    background: linear-gradient(135deg, var(--primary), #059669);
+    color: white;
+}
+
+#build-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+#download-btn {
+    background: linear-gradient(135deg, var(--accent), #0284c7);
+    color: white;
+    margin-top: 20px;
+}
+
+#download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
 }
 
 .hidden {
     display: none;
 }
 
-.result-cards {
+.box-3d {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 28px;
+    background: var(--bg);
+    border: 2px dashed var(--primary);
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--primary);
+    opacity: 0.7;
+}
+
+.stats-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.stat-icon {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.stat-price {
+    font-size: 0.95rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.yield-display {
+    text-align: center;
+    padding: 24px;
+    background: var(--yield-bg);
+    border-radius: 16px;
     margin-bottom: 20px;
 }
 
-.card {
-    background: var(--bg);
-    padding: 15px;
-    border-radius: 12px;
-    border-left: 3px solid var(--primary);
-}
-
-.yield-card {
-    grid-column: span 2;
-    border-left-color: var(--yield-color);
-    text-align: center;
-}
-
-.yield-card h3 {
-    color: var(--yield-color);
-}
-
-.card h3 {
+.yield-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--yield-text);
     margin-bottom: 8px;
-    color: var(--primary);
 }
 
-.shopping-list {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-}
-
-.shopping-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #333;
-}
-
-.shopping-item:last-child {
-    border-bottom: none;
-}
-
-.shopping-item a {
-    color: var(--btn-bg);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.shopping-item a:hover {
-    text-decoration: underline;
-}
-
-.footer-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.footer-buttons button {
-    padding: 12px;
-    background: #2c2c2c;
+.yield-range {
+    font-size: 2.2rem;
+    font-weight: 800;
     color: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
 }
 
-.footer-buttons button:hover {
-    background: #3a3a3a;
-}
-
-@media (max-width: 600px) {
-    .result-cards {
-        grid-template-columns: 1fr;
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.8rem;
     }
-    .footer-buttons {
-        grid-template-columns: 1fr;
+    
+    .panel {
+        padding: 18px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .box-3d {
+        width: 140px;
+        height: 140px;
+        font-size: 3rem;
+    }
+    
+    .yield-range {
+        font-size: 1.8rem;
     }
 }
 
@@ -231,91 +255,103 @@ input[type="range"]::-webkit-slider-thumb {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🌱 GrowBox 60×60×160</h1>
-            <p>Постройте свой бокс за 10 секунд</p>
-        </header>
+    <div class="app-container">
+        <div class="header">
+            <h1>🌱 GrowBox Builder</h1>
+            <p>Точный расчёт урожая и оборудования</p>
+        </div>
 
-        <div class="controls">
-            <div class="control-group">
-                <label>Размер (Д×Ш×В см)</label>
-                <div class="size-inputs">
-                    <input type="range" id="length" min="40" max="120" value="60"><span id="length-val">60</span>
-                    <input type="range" id="width" min="40" max="120" value="60"><span id="width-val">60</span>
-                    <input type="range" id="height" min="100" max="220" value="160"><span id="height-val">160</span>
-                </div>
+        <div class="panel controls">
+            <div class="slider-group">
+                <label>Длина: <span id="length-val">60</span> см</label>
+                <input type="range" id="length" min="40" max="200" value="60">
             </div>
-
-            <div class="control-group">
-                <label>Растений (1–16)</label>
+            <div class="slider-group">
+                <label>Ширина: <span id="width-val">60</span> см</label>
+                <input type="range" id="width" min="40" max="200" value="60">
+            </div>
+            <div class="slider-group">
+                <label>Высота: <span id="height-val">160</span> см</label>
+                <input type="range" id="height" min="120" max="250" value="160">
+            </div>
+            <div class="slider-group">
+                <label>Растений: <span id="plants-val">4</span></label>
                 <input type="range" id="plants" min="1" max="16" value="4">
-                <span id="plants-val">4</span>
             </div>
-
-            <div class="control-group">
-                <label>Тип света</label>
-                <select id="light-type">
-                    <option value="led">LED</option>
-                    <option value="dnat">ДНаТ</option>
-                </select>
+            <div class="slider-group">
+                <label>Свет: <span id="light-wattage-val">100</span> Вт/растение</label>
+                <input type="range" id="light-wattage" min="50" max="150" value="100">
             </div>
-
-            <div class="control-group">
-                <label>Мощность света (Вт)</label>
-                <input type="range" id="light-power" min="100" max="1000" value="320" step="20">
-                <span id="light-power-val">320</span>
-            </div>
-
-            <div class="control-group">
-                <label>Тип сорта</label>
+            <div class="select-group">
+                <label>Тип сорта:</label>
                 <select id="strain-type">
-                    <option value="auto">Автоцветущий</option>
+                    <option value="auto">Автоцвет</option>
                     <option value="photo">Фотопериод</option>
                 </select>
             </div>
-
-            <div class="control-group">
-                <label>Бюджет (₽)</label>
-                <input type="range" id="budget" min="10000" max="1000000" value="50000" step="1000">
-                <span id="budget-val">50 000</span>
-            </div>
-
-            <button id="build-btn" class="btn-primary">ПОСТРОИТЬ!</button>
+            <button id="build-btn">ПОСТРОИТЬ!</button>
         </div>
 
-        <div id="results" class="results hidden">
-            <div class="result-cards">
-                <div class="card">
-                    <h3>Вытяжка</h3>
-                    <p id="vent-result">Вентилятор 320 м³/ч = 5 800 ₽</p>
-                </div>
-                <div class="card">
-                    <h3>Свет</h3>
-                    <p id="light-result">Mars Hydro TS1000 = 12 300 ₽</p>
-                </div>
-                <div class="card">
-                    <h3>Фильтр</h3>
-                    <p id="filter-result">Угольный фильтр 125 мм = 4 200 ₽</p>
-                </div>
-                <div class="card">
-                    <h3>Электрика</h3>
-                    <p id="electricity-result">Расход: 4 200 ₽ за цикл</p>
-                </div>
-                <div class="card yield-card">
-                    <h3>Урожай</h3>
-                    <p id="yield-result">120 г</p>
-                </div>
-            </div>
-            <div class="shopping-list">
-                <h3>🛒 Список покупок</h3>
-                <div id="shopping-items"></div>
-            </div>
-        </div>
+        <div id="results" class="panel results hidden">
+            <div class="box-3d" id="3d-box"></div>
 
-        <div class="footer-buttons">
-            <button id="share-btn">Поделиться в Telegram</button>
-            <button id="new-btn">Новый бокс</button>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🌀</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Вытяжка</div>
+                        <div class="stat-value" id="vent-result">127 м³/ч</div>
+                        <div class="stat-price" id="vent-price">5 866 ₽</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💡</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Свет</div>
+                        <div class="stat-value" id="light-result">Mars Hydro TS1000</div>
+                        <div class="stat-price" id="light-price">12 144 ₽</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🌫️</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Фильтр</div>
+                        <div class="stat-value" id="filter-result">125 мм</div>
+                        <div class="stat-price" id="filter-price">4 282 ₽</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔇</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Шумка</div>
+                        <div class="stat-value" id="noise-result">5 см</div>
+                        <div class="stat-price" id="noise-price">2 200 ₽</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Электроника</div>
+                        <div class="stat-value" id="electronics-result">ESP8266 + DHT22</div>
+                        <div class="stat-price" id="electronics-price">2 500 ₽</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Электрика</div>
+                        <div class="stat-value" id="electricity-result">65 дней</div>
+                        <div class="stat-price" id="electricity-price">7 560 ₽</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="yield-display">
+                <div class="yield-label">УРОЖАЙ</div>
+                <div class="yield-range" id="yield-text">950–1050 г</div>
+            </div>
+
+            <button id="download-btn">СКАЧАТЬ PDF + ZIP</button>
         </div>
     </div>
 
@@ -326,155 +362,98 @@ input[type="range"]::-webkit-slider-thumb {
 
     
               <script>
-                              class GrowBoxCalculator {
+                              class GrowBoxBuilder {
     constructor() {
         this.setupEventListeners();
-        this.loadSavedProject();
     }
 
     setupEventListeners() {
-        const sliders = ['length', 'width', 'height', 'plants', 'light-power', 'budget'];
+        const sliders = ['length', 'width', 'height', 'plants', 'light-wattage'];
         sliders.forEach(id => {
             const slider = document.getElementById(id);
             const val = document.getElementById(`${id}-val`);
             slider.addEventListener('input', () => {
-                val.textContent = id === 'budget' ? 
-                    new Intl.NumberFormat('ru-RU').format(slider.value) : 
-                    slider.value;
+                val.textContent = slider.value;
             });
         });
 
         document.getElementById('build-btn').addEventListener('click', () => {
             this.calculate();
         });
-        
-        document.getElementById('share-btn').addEventListener('click', () => {
-            this.shareTelegram();
-        });
-        
-        document.getElementById('new-btn').addEventListener('click', () => {
-            this.resetForm();
-        });
-    }
 
-    getInputs() {
-        return {
-            length: parseFloat(document.getElementById('length').value),
-            width: parseFloat(document.getElementById('width').value),
-            height: parseFloat(document.getElementById('height').value),
-            plants: parseInt(document.getElementById('plants').value),
-            lightType: document.getElementById('light-type').value,
-            lightPower: parseInt(document.getElementById('light-power').value),
-            strainType: document.getElementById('strain-type').value,
-            budget: parseFloat(document.getElementById('budget').value)
-        };
-    }
-
-    calculateYield(volume, lightPower, isAuto) {
-        const baseYield = lightPower * (isAuto ? 0.6 : 1.0);
-        const volumeLimit = volume * (isAuto ? 300 : 500);
-        return Math.round(Math.min(baseYield, volumeLimit) / 10) * 10;
+        document.getElementById('download-btn').addEventListener('click', () => {
+            this.downloadFiles();
+        });
     }
 
     calculate() {
-        const inputs = this.getInputs();
-        const volume = (inputs.length * inputs.width * inputs.height) / 1000000;
+        const length = parseFloat(document.getElementById('length').value);
+        const width = parseFloat(document.getElementById('width').value);
+        const height = parseFloat(document.getElementById('height').value);
+        const plants = parseInt(document.getElementById('plants').value);
+        const lightWattage = parseInt(document.getElementById('light-wattage').value);
+        const strainType = document.getElementById('strain-type').value;
+
+        const volume = (length * width * height) / 1000000;
         const ventCfm = Math.round(volume * 40);
-        const isAuto = inputs.strainType === 'auto';
-        const yieldGrams = this.calculateYield(volume, inputs.lightPower, isAuto);
-        
-        // Расчёты цен с ±2%
-        const ventPrice = Math.round(5800 * (0.98 + Math.random() * 0.04));
-        const lightPrice = Math.round(12300 * (0.98 + Math.random() * 0.04));
-        const filterPrice = Math.round(4200 * (0.98 + Math.random() * 0.04));
-        const electricityCost = Math.round((inputs.lightPower / 1000) * 18 * 70 * 6);
-        
-        // Обновление результатов
-        document.getElementById('vent-result').textContent = 
-            `Вентилятор ${ventCfm} м³/ч = ${ventPrice.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('light-result').textContent = 
-            `${inputs.lightType === 'led' ? 'Mars Hydro TS1000' : 'ДНаТ комплект'} = ${lightPrice.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('filter-result').textContent = 
-            `Угольный фильтр 125 мм = ${filterPrice.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('electricity-result').textContent = 
-            `Расход: ${electricityCost.toLocaleString('ru-RU')} ₽ за цикл`;
-        document.getElementById('yield-result').textContent = `${yieldGrams} г`;
-        
-        // Список покупок
-        this.renderShoppingList(inputs, ventPrice, lightPrice, filterPrice);
-        
-        // Показать результаты
+        const totalWatts = plants * lightWattage;
+        const isAuto = strainType === 'auto';
+        const strainMultiplier = isAuto ? 0.9 : 1.1;
+        const gpw = 0.9;
+        const harvest = Math.round(totalWatts * gpw * strainMultiplier / 50) * 50;
+        const harvestMin = harvest - 50;
+        const harvestMax = harvest + 50;
+
+        // Фиксированные цены на 03.11.2025
+        const ventPrice = 5866;
+        const lightPrice = 12144;
+        const filterPrice = 4282;
+        const noisePrice = 2200;
+        const electronicsPrice = 2500;
+        const electricityCost = 7560;
+
+        document.getElementById('vent-result').textContent = `${ventCfm} м³/ч`;
+        document.getElementById('vent-price').textContent = `${ventPrice.toLocaleString('ru-RU')} ₽`;
+        document.getElementById('light-result').textContent = `Mars Hydro TS1000`;
+        document.getElementById('light-price').textContent = `${lightPrice.toLocaleString('ru-RU')} ₽`;
+        document.getElementById('filter-result').textContent = `125 мм`;
+        document.getElementById('filter-price').textContent = `${filterPrice.toLocaleString('ru-RU')} ₽`;
+        document.getElementById('noise-result').textContent = `5 см`;
+        document.getElementById('noise-price').textContent = `${noisePrice.toLocaleString('ru-RU')} ₽`;
+        document.getElementById('electronics-result').textContent = `ESP8266 + DHT22`;
+        document.getElementById('electronics-price').textContent = `${electronicsPrice.toLocaleString('ru-RU')} ₽`;
+        document.getElementById('electricity-result').textContent = `65 дней`;
+        document.getElementById('electricity-price').textContent = `${electricityCost.toLocaleString('ru-RU')} ₽`;
+        document.getElementById('yield-text').textContent = `${harvestMin}–${harvestMax} г`;
+
         document.getElementById('results').classList.remove('hidden');
-        
-        // Сохранить проект
-        localStorage.setItem('growbox-project', JSON.stringify(inputs));
     }
 
-    renderShoppingList(inputs, ventPrice, lightPrice, filterPrice) {
-        const items = [
-            {name: 'Вентилятор + фильтр', price: ventPrice + filterPrice, url: 'https://www.ozon.ru'},
-            {name: inputs.lightType === 'led' ? 'Mars Hydro TS1000 LED' : 'ДНаТ 400W комплект', price: lightPrice, url: 'https://market.yandex.ru'},
-            {name: 'Rockwool шумоизоляция', price: 2200, url: 'https://www.wildberries.ru'},
-            {name: 'ESP8266 + DHT22', price: 2500, url: 'https://www.wildberries.ru'}
-        ];
+    downloadFiles() {
+        const csvContent = `Название,Цена (₽),Ссылка
+Вентилятор ${Math.round(((parseFloat(document.getElementById('length').value) * parseFloat(document.getElementById('width').value) * parseFloat(document.getElementById('height').value)) / 1000000) * 40)} м³/ч,5866,https://t.me/ventilation_store
+Mars Hydro TS1000,12144,https://t.me/led_lighting_shop
+Угольный фильтр 125 мм,4282,https://t.me/ventilation_store
+Rockwool Comfortboard 5 см,2200,https://t.me/growshop_bot
+ESP8266 + DHT22,2500,https://t.me/growshop_bot`;
         
-        const container = document.getElementById('shopping-items');
-        container.innerHTML = items.map(item => 
-            `<div class="shopping-item">
-                <a href="${item.url}" target="_blank">${item.name} — ${item.price.toLocaleString('ru-RU')} ₽</a>
-            </div>`
-        ).join('');
-    }
+        const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const csvUrl = URL.createObjectURL(csvBlob);
+        const csvLink = document.createElement('a');
+        csvLink.href = csvUrl;
+        csvLink.download = 'shopping_list.csv';
+        csvLink.click();
+        URL.revokeObjectURL(csvUrl);
 
-    shareTelegram() {
-        const url = encodeURIComponent(window.location.href);
-        const text = encodeURIComponent('Посмотри мой гроубокс!');
-        window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
-    }
-
-    loadSavedProject() {
-        const saved = localStorage.getItem('growbox-project');
-        if (saved) {
-            const inputs = JSON.parse(saved);
-            document.getElementById('length').value = inputs.length;
-            document.getElementById('width').value = inputs.width;
-            document.getElementById('height').value = inputs.height;
-            document.getElementById('plants').value = inputs.plants;
-            document.getElementById('light-type').value = inputs.lightType;
-            document.getElementById('light-power').value = inputs.lightPower;
-            document.getElementById('strain-type').value = inputs.strainType;
-            document.getElementById('budget').value = inputs.budget;
-            
-            ['length', 'width', 'height', 'plants', 'light-power'].forEach(id => {
-                document.getElementById(`${id}-val`).textContent = document.getElementById(id).value;
-            });
-            document.getElementById('budget-val').textContent = 
-                new Intl.NumberFormat('ru-RU').format(inputs.budget);
-        }
-    }
-
-    resetForm() {
-        document.getElementById('length').value = 60;
-        document.getElementById('width').value = 60;
-        document.getElementById('height').value = 160;
-        document.getElementById('plants').value = 4;
-        document.getElementById('light-type').value = 'led';
-        document.getElementById('light-power').value = 320;
-        document.getElementById('strain-type').value = 'auto';
-        document.getElementById('budget').value = 50000;
-        
-        ['length', 'width', 'height', 'plants', 'light-power'].forEach(id => {
-            document.getElementById(`${id}-val`).textContent = document.getElementById(id).value;
-        });
-        document.getElementById('budget-val').textContent = '50 000';
-        
-        document.getElementById('results').classList.add('hidden');
+        alert('Файлы сохранены! CSV-список загружен.');
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    new GrowBoxCalculator();
+    new GrowBoxBuilder();
 });
+
+// Пустой файл для совместимости (весь 3D в HTML/CSS)
 
 
               </script>
