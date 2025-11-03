@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <title>Гроу Бокс Калькулятор</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        :root {
+            --tg-theme-bg-color: #ffffff;
+            --tg-theme-text-color: #000000;
+            --tg-theme-hint-color: #999999;
+            --tg-theme-link-color: #2481cc;
+            --tg-theme-button-color: #3390ec;
+            --tg-theme-button-text-color: #ffffff;
+            --primary-color: #4CAF50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --border-color: #e0e0e0;
+        }
+
+        .tg-theme-dark {
+            --tg-theme-bg-color: #111111;
+            --tg-theme-text-color: #ffffff;
+            --tg-theme-hint-color: #bbbbbb;
+            --tg-theme-link-color: #5eaafc;
+            --tg-theme-button-color: #3390ec;
+            --tg-theme-button-text-color: #ffffff;
+            --light-bg: #1e1e1e;
+            --border-color: #333333;
+        }
+
+        body {
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 20px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            line-height: 1.4;
+            color: var(--tg-theme-hint-color);
+        }
+
+        .calculator-section {
+            background: var(--light-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+            color: var(--tg-theme-text-color);
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--tg-theme-text-color);
+        }
+
+        .input-with-unit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .unit {
+            color: var(--tg-theme-hint-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            background: var(--tg-theme-bg-color);
+            border-radius: 12px;
+            margin-bottom: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-label {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .light-schedule {
+            background: rgba(76, 175, 80, 0.1);
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 14px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .light-schedule h4 {
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .results-section {
+            background: var(--light-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .costs-grid, .yield-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .cost-item, .yield-item {
+            background: var(--tg-theme-bg-color);
+            padding: 14px;
+            border-radius: 12px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .yield-item {
+            border-left-color: var(--success-color);
+        }
+
+        .cost-label, .yield-label {
+            font-size: 0.85rem;
+            color: var(--tg-theme-hint-color);
+            margin-bottom: 4px;
+        }
+
+        .cost-value, .yield-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--tg-theme-text-color);
+        }
+
+        .cost-value {
+            color: var(--danger-color);
+        }
+
+        .yield-value {
+            color: var(--success-color);
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, var(--tg-theme-button-color) 0%, #5d7bf3 100%);
+            color: var(--tg-theme-button-text-color);
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .summary-title {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .profit-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .profit-positive {
+            color: #a8e6cf;
+        }
+
+        .profit-negative {
+            color: #ff8a8a;
+        }
+
+        .roi-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: opacity 0.2s;
+        }
+
+        .btn:active {
+            opacity: 0.8;
+        }
+
+        .info-text {
+            background: rgba(34, 113, 177, 0.1);
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--tg-theme-text-color);
+            line-height: 1.4;
+        }
+
+        .info-text strong {
+            color: var(--tg-theme-link-color);
+        }
+
+        .crop-type-info {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            padding: 14px;
+            border-radius: 12px;
+            margin: 14px 0;
+            font-size: 0.85rem;
+        }
+
+        .crop-type-info h4 {
+            color: var(--warning-color);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .shopping-links {
+            background: var(--light-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .shopping-title {
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+            color: var(--tg-theme-text-color);
+            text-align: center;
+        }
+
+        .link-item {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: var(--tg-theme-bg-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .link-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .link-item a {
+            color: var(--tg-theme-link-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .link-item a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .costs-grid, .yield-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-with-unit {
+                flex-wrap: wrap;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌱 Гроу Бокс Калькулятор</h1>
+            <p class="subtitle">Рассчитайте затраты и приблизительный урожай</p>
+        </header>
+
+        <div class="calculator-section">
+            <h2 class="section-title">Параметры Бокса</h2>
+            
+            <div class="input-group">
+                <label class="input-label">Размер бокса (см)</label>
+                <div class="input-with-unit">
+                    <input type="number" id="boxWidth" min="30" max="200" value="60" placeholder="Ширина">
+                    <span class="unit">×</span>
+                    <input type="number" id="boxDepth" min="30" max="200" value="60" placeholder="Глубина">
+                    <span class="unit">×</span>
+                    <input type="number" id="boxHeight" min="60" max="250" value="150" placeholder="Высота">
+                    <span class="unit">см</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Тип культуры</label>
+                <div class="toggle-container">
+                    <span class="toggle-label">Автоцветы</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autoFlowering" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="crop-type-info">
+                    <h4>ℹ️ Типы культур</h4>
+                    <p><strong>Автоцветы:</strong> 8-10 недель, урожайность -25%</p>
+                    <p><strong>Фотопериод:</strong> 12-16 недель, максимальная урожайность</p>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Световая система</label>
+                <select id="lightingType">
+                    <option value="led_100w">LED 100W - 8000 ₽</option>
+                    <option value="led_200w">LED 200W - 15000 ₽</option>
+                    <option value="led_400w">LED 400W - 25000 ₽</option>
+                    <option value="hps_250w">HPS 250W - 6000 ₽</option>
+                    <option value="hps_400w">HPS 400W - 8000 ₽</option>
+                    <option value="hps_600w">HPS 600W - 12000 ₽</option>
+                </select>
+            </div>
+
+            <div class="light-schedule" id="lightSchedule">
+                <h4>💡 Световой режим</h4>
+                <p id="scheduleText">Автоцветы: 20/4</p>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Система вентиляции</label>
+                <select id="ventilationType">
+                    <option value="basic">Базовая - 2000 ₽</option>
+                    <option value="standard">Стандартная - 4000 ₽</option>
+                    <option value="premium">Премиум - 7000 ₽</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Питание (мес.)</label>
+                <div class="input-with-unit">
+                    <input type="number" id="nutrientsCost" min="0" value="2000" step="100">
+                    <span class="unit">₽/мес</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Цена за грамм</label>
+                <div class="input-with-unit">
+                    <input type="number" id="pricePerGram" min="0" value="300" step="10">
+                    <span class="unit">₽/г</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2 class="section-title">Результаты расчета</h2>
+            
+            <div class="costs-grid">
+                <div class="cost-item">
+                    <div class="cost-label">Свет</div>
+                    <div class="cost-value" id="lightCost">8 000 ₽</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Вентиляция</div>
+                    <div class="cost-value" id="ventCost">2 000 ₽</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Электричество</div>
+                    <div class="cost-value" id="electricityTotal">1 080 ₽</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Питание</div>
+                    <div class="cost-value" id="nutrientsTotal">2 000 ₽</div>
+                </div>
+            </div>
+
+            <div class="yield-grid">
+                <div class="yield-item">
+                    <div class="yield-label">Объем</div>
+                    <div class="yield-value" id="boxVolume">0.54 м³</div>
+                </div>
+                <div class="yield-item">
+                    <div class="yield-label">Урожай</div>
+                    <div class="yield-value" id="estimatedYield">100 г</div>
+                </div>
+                <div class="yield-item">
+                    <div class="yield-label">Доход</div>
+                    <div class="yield-value" id="harvestRevenue">30 000 ₽</div>
+                </div>
+                <div class="yield-item">
+                    <div class="yield-label">Затраты</div>
+                    <div class="yield-value" id="totalCosts">13 080 ₽</div>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-title">Финансовый результат</div>
+                <div class="profit-value" id="profitValue">+16 920 ₽</div>
+                <div class="roi-value" id="roiValue">ROI: 129%</div>
+            </div>
+
+            <div class="info-text">
+                <strong>Важно:</strong> Расчеты приблизительные. Фактический урожай зависит от множества факторов. Электричество рассчитано по 5 ₽/кВт·ч.
+            </div>
+
+            <button class="btn" id="sendToBot">Отправить результаты боту</button>
+        </div>
+
+        <div class="shopping-links">
+            <h3 class="shopping-title">🛒 Где купить оборудование</h3>
+            <div class="link-item">
+                <a href="https://t.me/growshop_bot
+  " target="_blank">Гроу боксы</a>
+            </div>
+            <div class="link-item">
+                <a href="https://t.me/led_lighting_shop
+  " target="_blank">LED панели</a>
+            </div>
+            <div class="link-item">
+                <a href="https://t.me/ventilation_store
+  " target="_blank">Вентиляция</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Telegram WebApp инициализация
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.ready();
+
+        // Применение темы Telegram
+        if (tg.colorScheme === 'dark') {
+            document.body.classList.add('tg-theme-dark');
+        }
+
+        // Цены оборудования
+        const lightingPrices = {
+            led_100w: 8000,
+            led_200w: 15000,
+            led_400w: 25000,
+            hps_250w: 6000,
+            hps_400w: 8000,
+            hps_600w: 12000
+        };
+
+        const ventilationPrices = {
+            basic: 2000,
+            standard: 4000,
+            premium: 7000
+        };
+
+        const lightingPower = {
+            led_100w: 100,
+            led_200w: 200,
+            led_400w: 400,
+            hps_250w: 250,
+            hps_400w: 400,
+            hps_600w: 600
+        };
+
+        const cycleDurations = {
+            autoFlowering: 9,
+            photoPeriod: 14
+        };
+
+        // DOM элементы
+        const boxWidth = document.getElementById('boxWidth');
+        const boxDepth = document.getElementById('boxDepth');
+        const boxHeight = document.getElementById('boxHeight');
+        const autoFlowering = document.getElementById('autoFlowering');
+        const lightingType = document.getElementById('lightingType');
+        const ventilationType = document.getElementById('ventilationType');
+        const nutrientsCost = document.getElementById('nutrientsCost');
+        const pricePerGram = document.getElementById('pricePerGram');
+        const lightSchedule = document.getElementById('scheduleText');
+        const sendToBotBtn = document.getElementById('sendToBot');
+
+        // Результаты
+        const lightCost = document.getElementById('lightCost');
+        const ventCost = document.getElementById('ventCost');
+        const electricityTotal = document.getElementById('electricityTotal');
+        const nutrientsTotal = document.getElementById('nutrientsTotal');
+        const boxVolume = document.getElementById('boxVolume');
+        const estimatedYield = document.getElementById('estimatedYield');
+        const harvestRevenue = document.getElementById('harvestRevenue');
+        const totalCosts = document.getElementById('totalCosts');
+        const profitValue = document.getElementById('profitValue');
+        const roiValue = document.getElementById('roiValue');
+
+        // Форматирование валюты
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('ru-RU').format(amount) + ' ₽';
+        }
+
+        // Обновление светового режима
+        function updateLightSchedule() {
+            if (autoFlowering.checked) {
+                lightSchedule.textContent = 'Автоцветы: 20/4';
+            } else {
+                lightSchedule.textContent = 'Фотопериод: 18/6 → 12/12';
+            }
+        }
+
+        // Расчет урожая
+        function calculateYield(volume, lightingWattage, isAutoFlowering) {
+            const isLED = lightingType.value.includes('led');
+            const baseYieldPerWatt = isLED ? 0.5 : 0.8;
+            let maxYieldByLight = lightingWattage * baseYieldPerWatt;
+            
+            if (isAutoFlowering) {
+                maxYieldByLight *= 0.75;
+            }
+            
+            const maxYieldByVolume = volume * (isAutoFlowering ? 400 : 500);
+            const yield = Math.min(maxYieldByLight, maxYieldByVolume);
+            return Math.round(yield / 10) * 10;
+        }
+
+        // Расчет электричества
+        function calculateElectricityCost(powerWattage, isAutoFlowering) {
+            const electricityRate = 5;
+            const cycleWeeks = isAutoFlowering ? cycleDurations.autoFlowering : cycleDurations.photoPeriod;
+            const cycleDays = cycleWeeks * 7;
+            
+            let totalKwh = 0;
+            if (isAutoFlowering) {
+                totalKwh = (powerWattage / 1000) * 20 * cycleDays;
+            } else {
+                const vegDays = 4 * 7;
+                const flowerDays = cycleDays - vegDays;
+                totalKwh = (powerWattage / 1000) * 18 * vegDays + (powerWattage / 1000) * 12 * flowerDays;
+            }
+            
+            return Math.round(totalKwh * electricityRate);
+        }
+
+        // Расчет питания
+        function calculateNutrientsCost(monthlyCost, isAutoFlowering) {
+            const cycleMonths = (isAutoFlowering ? cycleDurations.autoFlowering : cycleDurations.photoPeriod) / 4;
+            return Math.round(monthlyCost * cycleMonths);
+        }
+
+        // Обновление расчетов
+        function updateCalculations() {
+            const width = parseFloat(boxWidth.value) || 60;
+            const depth = parseFloat(boxDepth.value) || 60;
+            const height = parseFloat(boxHeight.value) || 150;
+            const isAutoFlowering = autoFlowering.checked;
+            
+            const volume = (width * depth * height) / 1000000;
+            const lightingWattage = lightingPower[lightingType.value];
+            const nutrients = parseFloat(nutrientsCost.value) || 0;
+            const pricePerGramValue = parseFloat(pricePerGram.value) || 300;
+            
+            const lightPrice = lightingPrices[lightingType.value];
+            const ventPrice = ventilationPrices[ventilationType.value];
+            const elecCost = calculateElectricityCost(lightingWattage, isAutoFlowering);
+            const nutrientsTotalCost = calculateNutrientsCost(nutrients, isAutoFlowering);
+            const yield = calculateYield(volume, lightingWattage, isAutoFlowering);
+            const revenue = yield * pricePerGramValue;
+            const totalExpenses = lightPrice + ventPrice + elecCost + nutrientsTotalCost;
+            const profit = revenue - totalExpenses;
+            const roi = totalExpenses > 0 ? ((profit / totalExpenses) * 100) : 0;
+            
+            lightCost.textContent = formatCurrency(lightPrice);
+            ventCost.textContent = formatCurrency(ventPrice);
+            electricityTotal.textContent = formatCurrency(elecCost);
+            nutrientsTotal.textContent = formatCurrency(nutrientsTotalCost);
+            boxVolume.textContent = volume.toFixed(2) + ' м³';
+            estimatedYield.textContent = yield + ' г';
+            harvestRevenue.textContent = formatCurrency(revenue);
+            totalCosts.textContent = formatCurrency(totalExpenses);
+            
+            profitValue.textContent = (profit >= 0 ? '+' : '') + formatCurrency(profit);
+            profitValue.className = 'profit-value ' + (profit >= 0 ? 'profit-positive' : 'profit-negative');
+            roiValue.textContent = `ROI: ${Math.round(roi)}%`;
+            
+            updateLightSchedule();
+        }
+
+        // Отправка данных боту
+        sendToBotBtn.addEventListener('click', () => {
+            const results = {
+                boxSize: `${boxWidth.value}×${boxDepth.value}×${boxHeight.value} см`,
+                cropType: autoFlowering.checked ? 'Автоцветы' : 'Фотопериод',
+                lighting: lightingType.value,
+                ventilation: ventilationType.value,
+                nutrientsCost: nutrientsCost.value,
+                pricePerGram: pricePerGram.value,
+                estimatedYield: estimatedYield.textContent,
+                totalCosts: totalCosts.textContent,
+                profit: profitValue.textContent,
+                roi: roiValue.textContent
+            };
+            
+            // Отправка данных боту через WebApp
+            tg.sendData(JSON.stringify(results));
+            tg.close();
+        });
+
+        // Обработчики событий
+        boxWidth.addEventListener('input', updateCalculations);
+        boxDepth.addEventListener('input', updateCalculations);
+        boxHeight.addEventListener('input', updateCalculations);
+        autoFlowering.addEventListener('change', updateCalculations);
+        lightingType.addEventListener('change', updateCalculations);
+        ventilationType.addEventListener('change', updateCalculations);
+        nutrientsCost.addEventListener('input', updateCalculations);
+        pricePerGram.addEventListener('input', updateCalculations);
+
+        // Начальный расчет
+        updateCalculations();
+    </script>
+</body>
+</html>
