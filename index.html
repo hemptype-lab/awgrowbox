@@ -23,6 +23,7 @@
     --card-bg: #1e1e1e;
     --border: #333;
     --btn-bg: #3390ec;
+    --yield-color: #8bc34a;
 }
 
 body {
@@ -89,6 +90,18 @@ input[type="range"], select {
     background: var(--bg);
     color: var(--text);
     border: 1px solid var(--border);
+    appearance: none;
+    height: 8px;
+    background: linear-gradient(to right, var(--primary), #8bc34a);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
 }
 
 .btn-primary {
@@ -102,6 +115,11 @@ input[type="range"], select {
     font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background: #2a7bc7;
 }
 
 .results {
@@ -114,13 +132,6 @@ input[type="range"], select {
 
 .hidden {
     display: none;
-}
-
-#3d-container {
-    height: 200px;
-    margin-bottom: 20px;
-    background: #2a2a2a;
-    border-radius: 12px;
 }
 
 .result-cards {
@@ -137,38 +148,49 @@ input[type="range"], select {
     border-left: 3px solid var(--primary);
 }
 
+.yield-card {
+    grid-column: span 2;
+    border-left-color: var(--yield-color);
+    text-align: center;
+}
+
+.yield-card h3 {
+    color: var(--yield-color);
+}
+
 .card h3 {
     margin-bottom: 8px;
     color: var(--primary);
 }
 
-.actions {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.actions button {
-    padding: 10px;
-    background: #2c2c2c;
-    color: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-#qr-container {
-    text-align: center;
-    padding: 20px;
-    background: white;
-    border-radius: 12px;
+.shopping-list {
     margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.shopping-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+}
+
+.shopping-item:last-child {
+    border-bottom: none;
+}
+
+.shopping-item a {
+    color: var(--btn-bg);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.shopping-item a:hover {
+    text-decoration: underline;
 }
 
 .footer-buttons {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
@@ -179,10 +201,18 @@ input[type="range"], select {
     border: 1px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
+    transition: background 0.3s;
+}
+
+.footer-buttons button:hover {
+    background: #3a3a3a;
 }
 
 @media (max-width: 600px) {
-    .result-cards, .actions, .footer-buttons {
+    .result-cards {
+        grid-template-columns: 1fr;
+    }
+    .footer-buttons {
         grid-template-columns: 1fr;
     }
 }
@@ -199,7 +229,6 @@ input[type="range"], select {
     <meta name="color-scheme" content="light dark">
     <title>GrowBox Builder</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -225,7 +254,7 @@ input[type="range"], select {
             </div>
 
             <div class="control-group">
-                <label>Свет</label>
+                <label>Тип света</label>
                 <select id="light-type">
                     <option value="led">LED</option>
                     <option value="dnat">ДНаТ</option>
@@ -233,38 +262,29 @@ input[type="range"], select {
             </div>
 
             <div class="control-group">
-                <label>Тип сорта</label>
-                <select id="strain-type">
-                    <option value="auto">Авто</option>
-                    <option value="photo">Фото</option>
-                </select>
+                <label>Мощность света (Вт)</label>
+                <input type="range" id="light-power" min="100" max="1000" value="320" step="20">
+                <span id="light-power-val">320</span>
             </div>
 
             <div class="control-group">
-                <label>Температура (°C)</label>
-                <input type="range" id="temp" min="18" max="28" value="24">
-                <span id="temp-val">24</span>
+                <label>Тип сорта</label>
+                <select id="strain-type">
+                    <option value="auto">Автоцветущий</option>
+                    <option value="photo">Фотопериод</option>
+                </select>
             </div>
 
             <div class="control-group">
                 <label>Бюджет (₽)</label>
-                <input type="range" id="budget" min="10000" max="100000" value="30000" step="1000">
-                <span id="budget-val">30 000</span>
-            </div>
-
-            <div class="control-group">
-                <label>Уровень шума</label>
-                <select id="noise">
-                    <option value="quiet">Тихий</option>
-                    <option value="any">Любой</option>
-                </select>
+                <input type="range" id="budget" min="10000" max="1000000" value="50000" step="1000">
+                <span id="budget-val">50 000</span>
             </div>
 
             <button id="build-btn" class="btn-primary">ПОСТРОИТЬ!</button>
         </div>
 
         <div id="results" class="results hidden">
-            <div id="3d-container"></div>
             <div class="result-cards">
                 <div class="card">
                     <h3>Вытяжка</h3>
@@ -282,23 +302,23 @@ input[type="range"], select {
                     <h3>Электрика</h3>
                     <p id="electricity-result">Расход: 4 200 ₽ за цикл</p>
                 </div>
+                <div class="card yield-card">
+                    <h3>Урожай</h3>
+                    <p id="yield-result">120 г</p>
+                </div>
             </div>
-            <div class="actions">
-                <button id="pdf-btn">PDF Список покупок</button>
-                <button id="qr-btn">QR-код мониторинга</button>
-                <button id="zip-btn">Скачать всё ZIP</button>
+            <div class="shopping-list">
+                <h3>🛒 Список покупок</h3>
+                <div id="shopping-items"></div>
             </div>
-            <div id="qr-container" class="hidden"></div>
         </div>
 
         <div class="footer-buttons">
             <button id="share-btn">Поделиться в Telegram</button>
-            <button id="save-btn">Сохранить проект</button>
             <button id="new-btn">Новый бокс</button>
         </div>
     </div>
 
-    <script src="3d-box.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
@@ -306,16 +326,14 @@ input[type="range"], select {
 
     
               <script>
-                              // Расчёт и управление интерфейсом
-class GrowBoxBuilder {
+                              class GrowBoxCalculator {
     constructor() {
         this.setupEventListeners();
         this.loadSavedProject();
     }
 
     setupEventListeners() {
-        // Обновление значений ползунков
-        const sliders = ['length', 'width', 'height', 'plants', 'temp', 'budget'];
+        const sliders = ['length', 'width', 'height', 'plants', 'light-power', 'budget'];
         sliders.forEach(id => {
             const slider = document.getElementById(id);
             const val = document.getElementById(`${id}-val`);
@@ -326,30 +344,12 @@ class GrowBoxBuilder {
             });
         });
 
-        // Кнопка построить
         document.getElementById('build-btn').addEventListener('click', () => {
-            this.calculateAndDisplay();
-        });
-
-        // Кнопки действий
-        document.getElementById('pdf-btn').addEventListener('click', () => {
-            this.downloadPDF();
-        });
-        
-        document.getElementById('qr-btn').addEventListener('click', () => {
-            this.showQR();
-        });
-        
-        document.getElementById('zip-btn').addEventListener('click', () => {
-            this.downloadZIP();
+            this.calculate();
         });
         
         document.getElementById('share-btn').addEventListener('click', () => {
             this.shareTelegram();
-        });
-        
-        document.getElementById('save-btn').addEventListener('click', () => {
-            this.saveProject();
         });
         
         document.getElementById('new-btn').addEventListener('click', () => {
@@ -364,84 +364,72 @@ class GrowBoxBuilder {
             height: parseFloat(document.getElementById('height').value),
             plants: parseInt(document.getElementById('plants').value),
             lightType: document.getElementById('light-type').value,
+            lightPower: parseInt(document.getElementById('light-power').value),
             strainType: document.getElementById('strain-type').value,
-            temp: parseFloat(document.getElementById('temp').value),
-            budget: parseFloat(document.getElementById('budget').value),
-            noise: document.getElementById('noise').value
+            budget: parseFloat(document.getElementById('budget').value)
         };
     }
 
-    calculateAndDisplay() {
+    calculateYield(volume, lightPower, isAuto) {
+        const baseYield = lightPower * (isAuto ? 0.6 : 1.0);
+        const volumeLimit = volume * (isAuto ? 300 : 500);
+        return Math.round(Math.min(baseYield, volumeLimit) / 10) * 10;
+    }
+
+    calculate() {
         const inputs = this.getInputs();
         const volume = (inputs.length * inputs.width * inputs.height) / 1000000;
         const ventCfm = Math.round(volume * 40);
-        const lightWatts = inputs.plants * 80;
+        const isAuto = inputs.strainType === 'auto';
+        const yieldGrams = this.calculateYield(volume, inputs.lightPower, isAuto);
         
-        // Простые цены
-        const ventPrice = Math.min(8000, Math.max(4000, ventCfm * 15));
-        const lightPrice = inputs.lightType === 'led' ? 
-            Math.min(25000, Math.max(8000, lightWatts * 120)) : 
-            Math.min(12000, Math.max(6000, lightWatts * 80));
-        const filterPrice = 4200;
-        const electricityCost = Math.round((lightWatts / 1000) * 18 * 70 * 6);
-
+        // Расчёты цен с ±2%
+        const ventPrice = Math.round(5800 * (0.98 + Math.random() * 0.04));
+        const lightPrice = Math.round(12300 * (0.98 + Math.random() * 0.04));
+        const filterPrice = Math.round(4200 * (0.98 + Math.random() * 0.04));
+        const electricityCost = Math.round((inputs.lightPower / 1000) * 18 * 70 * 6);
+        
         // Обновление результатов
         document.getElementById('vent-result').textContent = 
             `Вентилятор ${ventCfm} м³/ч = ${ventPrice.toLocaleString('ru-RU')} ₽`;
         document.getElementById('light-result').textContent = 
-            `${inputs.lightType === 'led' ? 'Mars Hydro TS' : 'ДНаТ комплект'} = ${lightPrice.toLocaleString('ru-RU')} ₽`;
+            `${inputs.lightType === 'led' ? 'Mars Hydro TS1000' : 'ДНаТ комплект'} = ${lightPrice.toLocaleString('ru-RU')} ₽`;
         document.getElementById('filter-result').textContent = 
             `Угольный фильтр 125 мм = ${filterPrice.toLocaleString('ru-RU')} ₽`;
         document.getElementById('electricity-result').textContent = 
             `Расход: ${electricityCost.toLocaleString('ru-RU')} ₽ за цикл`;
-
-        // Показать результаты и 3D
+        document.getElementById('yield-result').textContent = `${yieldGrams} г`;
+        
+        // Список покупок
+        this.renderShoppingList(inputs, ventPrice, lightPrice, filterPrice);
+        
+        // Показать результаты
         document.getElementById('results').classList.remove('hidden');
         
-        // Инициализировать 3D
-        if (window.init3DBox) {
-            window.init3DBox(inputs.length, inputs.width, inputs.height);
-        }
+        // Сохранить проект
+        localStorage.setItem('growbox-project', JSON.stringify(inputs));
     }
 
-    downloadPDF() {
-        const inputs = this.getInputs();
-        const content = `Список покупок для GrowBox ${inputs.length}×${inputs.width}×${inputs.height} см\n\n` +
-            `1. Вентилятор ${Math.round((inputs.length*inputs.width*inputs.height/1000000)*40)} м³/ч - ${Math.min(8000, Math.max(4000, Math.round((inputs.length*inputs.width*inputs.height/1000000)*40) * 15))} ₽ - https://www.ozon.ru\n` +
-            `2. ${inputs.lightType === 'led' ? 'Mars Hydro TS' : 'ДНаТ комплект'} - ${inputs.lightType === 'led' ? Math.min(25000, Math.max(8000, inputs.plants * 80 * 120)) : Math.min(12000, Math.max(6000, inputs.plants * 80 * 80))} ₽ - https://market.yandex.ru\n` +
-            `3. Угольный фильтр 125 мм - 4 200 ₽ - https://www.wildberries.ru\n` +
-            `4. Rockwool шумоизоляция - 2 200 ₽ - https://www.ozon.ru\n` +
-            `5. ESP8266 + DHT22 - 2 500 ₽ - https://www.wildberries.ru`;
+    renderShoppingList(inputs, ventPrice, lightPrice, filterPrice) {
+        const items = [
+            {name: 'Вентилятор + фильтр', price: ventPrice + filterPrice, url: 'https://www.ozon.ru'},
+            {name: inputs.lightType === 'led' ? 'Mars Hydro TS1000 LED' : 'ДНаТ 400W комплект', price: lightPrice, url: 'https://market.yandex.ru'},
+            {name: 'Rockwool шумоизоляция', price: 2200, url: 'https://www.wildberries.ru'},
+            {name: 'ESP8266 + DHT22', price: 2500, url: 'https://www.wildberries.ru'}
+        ];
         
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'shopping_list.txt';
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-
-    showQR() {
-        const qrContainer = document.getElementById('qr-container');
-        qrContainer.innerHTML = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAGjElEQVR4nO2de4hUVRzHP/fOzux6z6676+6u5a6vXH1lZWVlPcpKfURW9A8RFEFED4iCKCKqHhQ9KTIqo8jKLKIoiqyoHlnZg17WrrtrvrLXXWfdmZ3pHn/3zOzuzN6ZuXPvzPmBwcy555zf+X3P75zH75w7FwghhBDiH7S+HkA7Mn3WfDZv3QFAUVEB+XlZBAIBNE0DQNO0vh5iUjN16hSWLl1KSUlJXw+lQ9QkC4gQovOZNGkSK1asID8/v6+H0iFJFZAkHmYyM2nSJFasWEF+fn5fD6VDkiogSXqYycykSZNYsWIF+fn5fT2UDkmygIhkJ5kCkiTDTCaSLSBJMMwkHknVhyTJMJORSZOmdPj1JAlIkgwzmZg0aQoTJ07s62F0SNIExE2SDDOZmTRpChMnTuzrYXRIMgXEZZJkmMnKpElTmDhxYl8P45IkVUCSZJjJzKRJU5g4cWJfD+OSJF1AkhhJMsxkRNKQZCQJSRKSISBJSLKQJCS5SEKSgKQjCUkCkowkJAlIapKQJCBpSEKSgOQkCUkAkpYkJAFIapKQBCDpSUKSjiQnCUk6pCAJSQJSk4QkHanJQVKSBCQvSUjSkaoUpCAJSEcKkpCkI3VZSDKSgOQlCUk6UpWFpCMByUsSkpTUZSEZSAKSlyQkaUlRFpKQBCAvCUhOUpeGJCUByEsCkpL0ZSE5SQCSkgQkJRnIQnKSACQlCUk6spGFJCYByEsCkpGMZCGZSQCSkgQkIxllIalJQBKSgGQkM1nISBKQhCQgCclOFjKVBCQhCUhC8pOFrCUByUgCkpD8ZCULSUACEpCEJCQDWclSFiQgCUlAEpKBbGQrA5KQBCQhCchANrKUFSUgCUlAEpKBbGQpO0pAEpKABGQgK1nKkhKQBCQgAVnJUpaypgQkAQlIQDaylKUsZTEBSUACEpCBbGQpq1lMQBKQgATkICtZynIWk4AEJCABOchKlrKe5SQgAQlIQC6ykqWs5CALCUhAArKRjaxkKSc5yEICkpCEbGQlKznJSQ6ykIBkJCEbWclJTnKQlQwkIAlJyEpWcpKTnOQkJxnIQBKSkaVs5CQnOclJTrKQhWQkIyvZyElOcpKTnGQhC1nIRlaSkpOc5CQnWchCFnKQlaxkJSs5yUlOspCVrGQjOznJSU6yk42sZCULWchGNrKVlazkJCc5yUlOMpCFbGQjW9nITjaykZWsZCELOchGNrKVlaxkJSfZyEFWspCNbGQrW9nIRjaykpVsZCEL2chGtrKSlaxkJyfZyEZWspCNbGQrW9nIRjaykpVsZCEL2chGtrKVlaxkJyfZyUIWspGNbGUtK1nJTk6ykYUsZCMb2cpaVrKSnexkJwtZyEY2spW1rGQlOznJThaykI1sZCtbWclKdnKSkyxkIQvZyEa2spWVrGQnJ9nJQhayk41sZSsrWclOdrKThexkIxvZylZ2spOd7GQhC9nIRraylZWc5CQnOclJTrKQhWxkIxvZyk5WcpKd7GQhC9nIRjayla2sZCU7OclJFrKQjWxkK1tZyU5OcpKTLGQhG9nIRraylZ2c5CQnOclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJFrKQjWxkK1tZyUp2cpKTnGQhC9nIRjayla2sZCU7OclJFrKQjWxkK1tZyUp2cpKTnGQhC9nIRrayla2sZCU7OclJFrKQjWxkK1tZyUp2cpKTnGQhC9nIRrayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJFrKQjWxkK1tZyUp2cpKTnGQhC9nIRrayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7OclJTrKQhWxkIxvZylZWcpKd7GQhC9nIRjayla2sZCU7......" alt="QR Code">';
-        qrContainer.classList.remove('hidden');
-    }
-
-    downloadZIP() {
-        alert('Функция ZIP требует JSZip, но для простоты сохраняем как TXT');
-        this.downloadPDF();
+        const container = document.getElementById('shopping-items');
+        container.innerHTML = items.map(item => 
+            `<div class="shopping-item">
+                <a href="${item.url}" target="_blank">${item.name} — ${item.price.toLocaleString('ru-RU')} ₽</a>
+            </div>`
+        ).join('');
     }
 
     shareTelegram() {
         const url = encodeURIComponent(window.location.href);
-        window.open(`https://t.me/share/url?url=${url}`, '_blank');
-    }
-
-    saveProject() {
-        const inputs = this.getInputs();
-        localStorage.setItem('growbox-project', JSON.stringify(inputs));
-        alert('Проект сохранён!');
+        const text = encodeURIComponent('Посмотри мой гроубокс!');
+        window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
     }
 
     loadSavedProject() {
@@ -453,13 +441,11 @@ class GrowBoxBuilder {
             document.getElementById('height').value = inputs.height;
             document.getElementById('plants').value = inputs.plants;
             document.getElementById('light-type').value = inputs.lightType;
+            document.getElementById('light-power').value = inputs.lightPower;
             document.getElementById('strain-type').value = inputs.strainType;
-            document.getElementById('temp').value = inputs.temp;
             document.getElementById('budget').value = inputs.budget;
-            document.getElementById('noise').value = inputs.noise;
             
-            // Обновить отображаемые значения
-            ['length', 'width', 'height', 'plants', 'temp'].forEach(id => {
+            ['length', 'width', 'height', 'plants', 'light-power'].forEach(id => {
                 document.getElementById(`${id}-val`).textContent = document.getElementById(id).value;
             });
             document.getElementById('budget-val').textContent = 
@@ -473,98 +459,22 @@ class GrowBoxBuilder {
         document.getElementById('height').value = 160;
         document.getElementById('plants').value = 4;
         document.getElementById('light-type').value = 'led';
+        document.getElementById('light-power').value = 320;
         document.getElementById('strain-type').value = 'auto';
-        document.getElementById('temp').value = 24;
-        document.getElementById('budget').value = 30000;
-        document.getElementById('noise').value = 'quiet';
+        document.getElementById('budget').value = 50000;
         
-        // Обновить отображаемые значения
-        ['length', 'width', 'height', 'plants', 'temp'].forEach(id => {
+        ['length', 'width', 'height', 'plants', 'light-power'].forEach(id => {
             document.getElementById(`${id}-val`).textContent = document.getElementById(id).value;
         });
-        document.getElementById('budget-val').textContent = '30 000';
+        document.getElementById('budget-val').textContent = '50 000';
         
         document.getElementById('results').classList.add('hidden');
-        document.getElementById('qr-container').classList.add('hidden');
     }
 }
 
-// Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', () => {
-    new GrowBoxBuilder();
+    new GrowBoxCalculator();
 });
-
-// Простая 3D модель гроубокса с Three.js
-function init3DBox(length, width, height) {
-    // Очистка предыдущей сцены
-    const container = document.getElementById('3d-container');
-    while (container.firstChild) {
-        container.removeChild(container.firstChild);
-    }
-
-    // Настройки сцены
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x2a2a2a);
-    
-    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / 200, 0.1, 1000);
-    camera.position.z = 300;
-    
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(container.clientWidth, 200);
-    container.appendChild(renderer.domElement);
-    
-    // Создание бокса
-    const boxGeometry = new THREE.BoxGeometry(length/2, width/2, height/2);
-    const boxMaterial = new THREE.MeshPhongMaterial({ 
-        color: 0x4CAF50,
-        transparent: true,
-        opacity: 0.8
-    });
-    const box = new THREE.Mesh(boxGeometry, boxMaterial);
-    scene.add(box);
-    
-    // Отверстия для вентиляции
-    const ventGeometry = new THREE.CylinderGeometry(30, 30, 5, 32);
-    const ventMaterial = new THREE.MeshPhongMaterial({ color: 0x333333 });
-    const ventTop = new THREE.Mesh(ventGeometry, ventMaterial);
-    ventTop.rotation.x = Math.PI / 2;
-    ventTop.position.y = height/4;
-    scene.add(ventTop);
-    
-    const ventSide = new THREE.Mesh(ventGeometry, ventMaterial);
-    ventSide.position.x = -length/4;
-    ventSide.position.z = -height/8;
-    scene.add(ventSide);
-    
-    // Освещение
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-    
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(100, 300, 200);
-    scene.add(directionalLight);
-    
-    // Анимация вращения
-    let rotationSpeed = 0.005;
-    function animate() {
-        requestAnimationFrame(animate);
-        box.rotation.y += rotationSpeed;
-        ventTop.rotation.y += rotationSpeed;
-        ventSide.rotation.y += rotationSpeed;
-        renderer.render(scene, camera);
-    }
-    animate();
-    
-    // Обработка ресайза
-    window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / 200;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, 200);
-    });
-}
-
-// Экспорт для использования в основном скрипте
-window.init3DBox = init3DBox;
 
 
               </script>
