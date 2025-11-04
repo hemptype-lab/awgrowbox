@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Калькулятор GrowBox</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="container">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Переключить тему"></button>
+    <h1>Собрать GrowBox</h1>
+
+    <div class="slider-group">
+      <div class="slider-item">
+        <div class="slider-label">Количество кустов</div>
+        <div class="slider-value" id="plants-value">6</div>
+        <input type="range" id="plants" min="1" max="16" value="6" />
+      </div>
+
+      <div class="slider-item">
+        <div class="slider-label">Объём горшка, л</div>
+        <div class="slider-value" id="pot-value">11</div>
+        <input type="range" id="pot" min="3" max="20" step="1" value="11" />
+      </div>
+    </div>
+
+    <button class="btn" id="calculate">ПОДОБРАТЬ КОМПЛЕКТ</button>
+
+    <div class="result" id="result">
+      <div class="cards" id="cards"></div>
+      <div class="total" id="total"></div>
+      <a href="https://t.me/atlantweed_bot" class="btn" target="_blank" rel="noopener">Задать вопрос гроверу</a>
+    </div>
+
+    <div class="footer">
+      <p>Проект GrowBox Calculator<br>
+      Работает в Telegram Mini App</p>
+    </div>
+  </div>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/calculator.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
