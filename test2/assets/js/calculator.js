@@ -11,30 +11,41 @@ class Calculator {
         }
     }
 
-    static async calculate(p, potVol) {
+    static async calculate(p) {
         if (!this.data) {
             console.error("Данные калькулятора не загружены");
             return;
         }
 
+        // Выбираем гроутент и вентиляцию на основе количества растений
         const { tent, filter, fan } = this.selectTentAndVentilation(p);
-        const potSize = this.selectPotSize(p, potVol);
-        const pot = this.data.pots[potSize];
+
+        // Рассчитываем объём горшка автоматически
+        const { selectedPotSize, totalPotsCount, totalSubstrateVolume } = this.calculatePotVolume(tent, p);
+
+        // Выбираем лампу на основе размеров гроутента
         const lamp = this.selectLamp(tent.l, tent.w);
 
-        const totalPotsPrice = pot.price * p;
+        // Получаем данные о выбранном горшке
+        const pot = this.data.pots[selectedPotSize];
 
+        // Рассчитываем общую стоимость горшков
+        const totalPotsPrice = pot.price * totalPotsCount;
+
+        // Формируем список продуктов
         const products = [
             { name: `Гроутент ${tent.name}`, price: tent.price, url: tent.url, icon: 'fa-tent' },
             { name: lamp.name, price: lamp.price, url: lamp.url, icon: 'fa-lightbulb' },
-            { name: `${p} шт. ${pot.name}`, price: totalPotsPrice, url: pot.url, icon: 'fa-seedling' },
+            { name: `${totalPotsCount} шт. ${pot.name} (Общий объём субстрата: ${totalSubstrateVolume} л)`, price: totalPotsPrice, url: pot.url, icon: 'fa-seedling' },
             { name: filter.name, price: filter.price, url: filter.url, icon: 'fa-filter' },
             { name: fan.name, price: fan.price, url: fan.url, icon: 'fa-fan' }
         ];
 
+        // Рассчитываем общую стоимость
         const total = products.reduce((sum, item) => sum + item.price, 0);
         const formattedTotal = total.toLocaleString('ru-RU') + ' ₽';
 
+        // Отображаем результат
         this.displayResult(products, formattedTotal);
     }
 
@@ -63,15 +74,44 @@ class Calculator {
         return { tent, filter, fan };
     }
 
-    static selectPotSize(p, potVol) {
-        const minPotSize = p <= 3 ? 3 : (p <= 8 ? 5 : 7);
-        const selectedPotSize = Math.max(minPotSize, potVol);
-        if (selectedPotSize <= 3) return 3;
-        if (selectedPotSize <= 5) return 5;
-        if (selectedPotSize <= 7) return 7;
-        if (selectedPotSize <= 10) return 10;
-        if (selectedPotSize <= 15) return 15;
-        return 20;
+    static calculatePotVolume(tent, p) {
+        // 1. Количество горшков = Площадь гроу-бокса (м²) ÷ Площадь под одно растение (м²)
+        // Площадь под одно растение варьируется от 0.1 до 0.25 м² в зависимости от фазы роста и сорта.
+        // Для упрощения используем среднее значение 0.16 м² на растение как базу, но увеличиваем для меньшего количества.
+        // Адаптируем логику: для 1-3 растений - больше места, для 4+ - стандартное.
+        let areaPerPlant = 0.25; // м² на растение для 1-2 растений
+        if (p > 2 && p <= 5) areaPerPlant = 0.20; // для 3-5 растений
+        if (p > 5) areaPerPlant = 0.16; // для 6+ растений
+
+        const calculatedPotsCount = Math.floor(tent.area / areaPerPlant);
+        const effectivePotsCount = Math.min(calculatedPotsCount, p); // Не больше, чем запрошено
+
+        // 2. Выбор размера одного горшка на основе количества растений
+        // Предположим, что для большего количества растений используются меньшие горшки, и наоборот.
+        // Используем простую логику: 1-3 растения -> 10-20л, 4-8 растений -> 7-15л, 9-16 растений -> 3-10л
+        let basePotSize = 20; // для 1-2 растений
+        if (p > 2 && p <= 5) basePotSize = 15; // для 3-5 растений
+        if (p > 5 && p <= 8) basePotSize = 10; // для 6-8 растений
+        if (p > 8) basePotSize = 7; // для 9+ растений
+
+        // Выбираем ближайший доступный размер из списка
+        const availablePotSizes = Object.keys(this.data.pots).map(Number).sort((a, b) => a - b);
+        let selectedPotSize = availablePotSizes[availablePotSizes.length - 1]; // по умолчанию самый большой
+        for (const size of availablePotSizes) {
+            if (size >= basePotSize) {
+                selectedPotSize = size;
+                break;
+            }
+        }
+
+        // 3. Общий объём субстрата = Количество горшков × Объём одного горшка (л)
+        const totalSubstrateVolume = effectivePotsCount * selectedPotSize;
+
+        return {
+            selectedPotSize: selectedPotSize,
+            totalPotsCount: effectivePotsCount,
+            totalSubstrateVolume: totalSubstrateVolume.toFixed(1) // Округляем до 1 знака после запятой
+        };
     }
 
     static selectLamp(l, w) {
