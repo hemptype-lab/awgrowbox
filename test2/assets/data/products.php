@@ -9,7 +9,7 @@ $products = [
         ['key' => '80', 'name' => 'Minifermer Green 80х80х160см', 'l' => 80, 'w' => 80, 'h' => 160, 'area' => 0.64, 'maxPlants' => 5, 'price' => 15990, 'url' => 'https://minifermer.ru/product_3511.html'],
         ['key' => '100', 'name' => 'Minifermer 100х100х200см', 'l' => 100, 'w' => 100, 'h' => 200, 'area' => 1.00, 'maxPlants' => 8, 'price' => 18990, 'url' => 'https://minifermer.ru/product_1534.html'],
         ['key' => '120', 'name' => 'Minifermer 120х120х200см', 'l' => 120, 'w' => 120, 'h' => 200, 'area' => 1.44, 'maxPlants' => 12, 'price' => 19990, 'url' => 'https://minifermer.ru/product_1535.html'],
-        ['key' => '150', 'name' => 'Minifermer Green 150х150х200см', 'l' => 150, 'w' => 150, 'h' => 200, 'area' => 2.25, 'maxPlants' => 16, 'price' => 24990, 'url' => 'https://minifermer.ru/product_1373.html'] // Предполагаемый URL для 150
+        ['key' => '150', 'name' => 'Minifermer Green 150х150х200см', 'l' => 150, 'w' => 150, 'h' => 200, 'area' => 2.25, 'maxPlants' => 16, 'price' => 27990, 'url' => 'https://minifermer.ru/product_1316.html'] // Используем URL от 150x150, предполагаем цену
     ],
     'pots' => [
         3 => ['name' => 'Тканевый горшок 3 л', 'price' => 66, 'url' => 'https://minifermer.ru/product_1315.html'],
